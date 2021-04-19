@@ -1,0 +1,51 @@
+:root{
+    --main-padding: 6rem;
+    --main-items-padding: 1.6rem;
+    --scroll-bar-width: 12px;
+
+    --item-ratio: 1.65;
+    --items-amount: 6;
+    --visible-items-amount: calc(var(--items-amount) - 1);
+
+    --item-width: calc(
+        (
+            (100vw - var(--scroll-bar-width)) -
+            var(--main-padding) * 2 -
+            var(--main-items-padding) * var(--visible-items-amount)
+        ) / var(--items-amount)
+    );
+    --item-height: calc(
+        var(--item-width) * var(--item-ratio)
+    );
+}
+
+@media screen and (max-width: 1200px) {
+    :root{
+        --items-amount: 5;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    :root{
+        --items-amount: 4;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    :root{
+        --main-padding: 4rem;
+        --items-amount: 3;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    :root{
+        --items-amount: 2;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    :root{
+        --items-amount: 1;
+    }
+}
