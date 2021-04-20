@@ -314,7 +314,7 @@ section{
 }
 
 .book{
-    --book-ratio: 1.577;
+    --cover-ratio: 1.577;
 
     width: 100%;
     display: block;
@@ -330,11 +330,11 @@ section{
 .book__cover{
     width: 100%;
     height: calc(
-        var(--item-height) * var(--book-ratio) / var(--max-cover-ratio)
+        var(--item-height) * var(--cover-ratio) / var(--max-cover-ratio)
     );
     margin-top: calc(
         var(--item-height) * (
-            1 - var(--book-ratio) / var(--max-cover-ratio)
+            1 - var(--cover-ratio) / var(--max-cover-ratio)
         )
     );
     border-radius: 0.3rem;

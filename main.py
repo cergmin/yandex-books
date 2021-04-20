@@ -2,6 +2,7 @@ import config
 from sections import *
 from controllers import *
 from flask import Flask, render_template
+from data import db_session
 
 app = Flask(
     __name__,
@@ -9,7 +10,25 @@ app = Flask(
     static_folder=config.STATIC_FOLDER
 )
 
-dc = DataController()
+app.config['SECRET_KEY'] = config.SECRET_KEY
+
+dc = DataController('db/books.db')
+dc.add_author('Милена Завойчинская')
+dc.add_author('Джоан Роулинг')
+dc.add_series('Высшая Школа Библиотекарей')
+dc.add_series('Гарри Поттер')
+dc.add_book('Магия книгоходцев', 1, 317, 500, series=1)
+dc.add_book('Боевая практика книгоходцев', 1, 317, 500, series=1)
+dc.add_book('Книгоходцы особого назначения', 1, 317, 500, series=1)
+dc.add_book('Книгоходцы и тайна механического бога', 1, 317, 500, series=1)
+dc.add_book('Хроники книгоходцев', 1, 317, 500, series=1)
+dc.add_book('Гарри Поттер и философский камень', 2, 333, 500, series=2)
+dc.add_book('Гарри Поттер и Тайная комната', 2, 333, 500, series=2)
+dc.add_book('Гарри Поттер и узник Азкабана', 2, 333, 500, series=2)
+dc.add_book('Гарри Поттер и Кубок огня', 2, 333, 500, series=2)
+dc.add_book('Гарри Поттер и Орден Феникса', 2, 333, 500, series=2)
+dc.add_book('Гарри Поттер и Принц-полукровка', 2, 333, 500, series=2)
+dc.add_book('Гарри Поттер и Дары Смерти', 2, 333, 500, series=2)
 
 
 @app.route('/')
@@ -17,104 +36,7 @@ def index():
     sections = []
 
     sections.append(
-        BookSection([
-            {
-                'book_id': 9,
-                'book_name': 'Гарри Поттер и философский камень',
-                'author_id': 2,
-                'author_name': 'Джоан Роулинг',
-                'cover_width': 333,
-                'cover_height': 500
-            },
-            {
-                'book_id': 10,
-                'book_name': 'Гарри Поттер и Тайная комната',
-                'author_id': 2,
-                'author_name': 'Джоан Роулинг',
-                'cover_width': 333,
-                'cover_height': 500
-            },
-            {
-                'book_id': 11,
-                'book_name': 'Гарри Поттер и узник Азкабана',
-                'author_id': 2,
-                'author_name': 'Джоан Роулинг',
-                'cover_width': 333,
-                'cover_height': 500
-            },
-            {
-                'book_id': 12,
-                'book_name': 'Гарри Поттер и Кубок огня',
-                'author_id': 2,
-                'author_name': 'Джоан Роулинг',
-                'cover_width': 333,
-                'cover_height': 500
-            },
-            {
-                'book_id': 13,
-                'book_name': 'Гарри Поттер и Орден Феникса',
-                'author_id': 2,
-                'author_name': 'Джоан Роулинг',
-                'cover_width': 333,
-                'cover_height': 500
-            },
-            {
-                'book_id': 14,
-                'book_name': 'Гарри Поттер и Принц-полукровка',
-                'author_id': 2,
-                'author_name': 'Джоан Роулинг',
-                'cover_width': 333,
-                'cover_height': 500
-            },
-            {
-                'book_id': 15,
-                'book_name': 'Гарри Поттер и Дары Смерти',
-                'author_id': 2,
-                'author_name': 'Джоан Роулинг',
-                'cover_width': 333,
-                'cover_height': 500
-            },
-            {
-                'book_id': 1,
-                'book_name': 'Магия книгоходцев',
-                'author_id': 1,
-                'author_name': 'Милена Завойчинская',
-                'cover_width': 317,
-                'cover_height': 500
-            },
-            {
-                'book_id': 2,
-                'book_name': 'Боевая практика книгоходцев',
-                'author_id': 1,
-                'author_name': 'Милена Завойчинская',
-                'cover_width': 317,
-                'cover_height': 500
-            },
-            {
-                'book_id': 3,
-                'book_name': 'Книгоходцы особого назначения',
-                'author_id': 1,
-                'author_name': 'Милена Завойчинская',
-                'cover_width': 317,
-                'cover_height': 500
-            },
-            {
-                'book_id': 4,
-                'book_name': 'Книгоходцы и тайна механического бога',
-                'author_id': 1,
-                'author_name': 'Милена Завойчинская',
-                'cover_width': 317,
-                'cover_height': 500
-            },
-            {
-                'book_id': 5,
-                'book_name': 'Хроники книгоходцев',
-                'author_id': 1,
-                'author_name': 'Милена Завойчинская',
-                'cover_width': 317,
-                'cover_height': 500
-            },
-        ], title='Новинки')
+        BookSection(dc, dc.get_books())
     )
 
     return render_template(
@@ -124,4 +46,5 @@ def index():
 
 
 if __name__ == '__main__':
+    db_session.global_init("db/books.db")
     app.run(port=config.PORT, host=config.HOST)

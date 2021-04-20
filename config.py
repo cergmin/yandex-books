@@ -3,3 +3,4 @@ HOST = '127.0.0.1'
 
 TEMPLATE_FOLDER = 'pages'
 STATIC_FOLDER = 'resources'
+SECRET_KEY = 'YuFUXYoPLaGwtBnjBRdwMIHslNLKjWce'
