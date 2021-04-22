@@ -25,6 +25,7 @@
 
 body{
     background-color: #f2f2f2;
+    overflow-x: hidden;
     overflow-y: visible;
 }
 
@@ -50,7 +51,7 @@ main{
     min-height: 150vh;
     height: auto;
     margin-top: 5rem;
-    padding-top: 20px;
+    padding-top: 1.2rem;
 }
 
 .header__logo_link{
@@ -399,6 +400,104 @@ section{
     border: 0.15rem solid #c90209;
 }
 
+.book_info{
+    grid-template-columns: min-content minmax(20rem, 1fr);
+    grid-template-rows: 1fr;
+    column-gap: 1.2rem;
+    display: grid;
+}
+
+.book_info__side{
+    width: min-content;
+    height: auto;
+}
+
+.book_info__cover{
+    width: auto;
+    height: calc(100vh - 7.2rem);
+    max-height: min(35rem, 50vw);
+    margin-bottom: 0.25rem;
+    border-radius: 0.3rem;
+    box-shadow: 0px 5px 15px -5px rgb(0 0 0 / 20%);
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.book_info__main{
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.book_info__name{
+    max-width: 40rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+}
+
+.book_info__author,
+.book_info__series,
+.book_info__description{
+    max-width: 40rem;
+    font-size: 1rem;
+    line-height: 1.4rem;
+    font-weight: 400;
+}
+
+.book_info__series,
+.book_info__description{
+    margin-bottom: 1rem;
+}
+
+.book_info__author a,
+.book_info__series a{
+    color: #222;
+    font-weight: 500;
+    text-decoration: none;
+    outline: none;
+}
+
+.book_info__author a:hover,
+.book_info__author a:focus,
+.book_info__series a:hover,
+.book_info__series a:focus{
+    color: #c90209;
+}
+
+.book_info__buy_button,
+.book_info__add_to_cart_button{
+    color: #000;
+    background-color: #ffcc00;
+    width: 100%;
+    max-width: 15rem;
+    height: 2.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 2.25rem;
+    outline: none;
+    border: none;
+    border-radius: 0.3rem;
+    user-select: none;
+    cursor: pointer;
+    display: block;
+}
+
+.book_info__buy_button:hover,
+.book_info__buy_button:focus{
+    background-color: #f0b400;
+}
+
+.book_info__add_to_cart_button{
+    background-color: #dbdbdb;
+}
+
+.book_info__add_to_cart_button:hover,
+.book_info__add_to_cart_button:focus{
+    background-color: #ccc;
+}
+
 @media screen and (max-width: 920px){
     .header__search{
         width: calc(100% - 12rem - 4rem - 6px);
@@ -448,6 +547,10 @@ section{
     .header__menu{
         bottom: calc(-1rem + 1px);
     }
+
+    .book_info__cover{
+        height: calc(100vh - 9.2rem);
+    }
 }
 
 @media screen and (max-width: 640px){
@@ -466,5 +569,9 @@ section{
     .header__logo_link,
     .header__menu{
         display: none;
+    }
+
+    .book_info__cover{
+        height: calc(100vh - 5.2rem);
     }
 }

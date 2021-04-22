@@ -20,7 +20,11 @@ class BookSection(Section):
         for book in books:
             self.data['books'].append({
                 'book_id': str(book.id),
-                'book_name': book.name,
+                'book_name': (
+                    book.name
+                    if len(book.short_name) == 0 else
+                    book.short_name
+                ),
                 'author_id': str(book.author_id),
                 'author_name': dc.get_author(book.author_id).name,
                 'cover_ratio': book.cover_height / book.cover_width

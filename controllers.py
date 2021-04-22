@@ -25,12 +25,15 @@ class DataController:
         self.session.add(series)
         self.session.commit()
 
-    def add_book(self, name, author_id, cover_width, cover_height, series=None):
+    def add_book(self, name, description, author_id, price, cover_width, cover_height, short_name='', series_id=-1):
         book = Book()
 
         book.name = name
+        book.short_name = short_name
+        book.description = description
         book.author_id = author_id
-        book.series = series
+        book.series_id = series_id
+        book.price = price
         book.cover_width = cover_width
         book.cover_height = cover_height
 
@@ -40,5 +43,11 @@ class DataController:
     def get_author(self, id):
         return self.session.query(Author).get(id)
 
+    def get_book(self, id):
+        return self.session.query(Book).get(id)
+
     def get_books(self):
         return self.session.query(Book).all()
+    
+    def get_series(self, id):
+        return self.session.query(Series).get(id)

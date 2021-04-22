@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+    <section class="book_info">
+        <div class="book_info__side">
+            <img
+                class="book_info__cover"
+                src="{{ url_for('static', filename='./images/covers/books/' + book.id|string + '.jpg') }}"
+                alt="Книга {{ book.name }} автора {{ author.name }}">
+        </div>
+        <div class="book_info__main">
+            <h1 class="book_info__name">{{ book.name }}</h1>
+            <p class="book_info__author">
+                Автор: <a href="{{ url_for('author', author_id=author.id) }}">{{ author.name }}</a>
+            </p>
+
+            {% if series %}
+            <p class="book_info__series">
+                Из серии: <a href="{{ url_for('series', series_id=series.id) }}">{{ series.name }}</a>
+            </p>
+            {% endif %}
+
+            <p class="book_info__description">
+                {{ book.description }}
+            </p>
+
+            <button class="book_info__buy_button" type="button">Купить за {{ price }}</button>
+            <button class="book_info__add_to_cart_button" type="button">Добавить в корзину</button>
+        </div>
+    </section>
+{% endblock %}

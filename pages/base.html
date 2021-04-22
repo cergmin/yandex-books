@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="msapplication-TileColor" content="#ffcc00">
+        <meta name="application-name" content="Яндекс.Книги">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Яндекс.Книги</title>
+        <link type="image/x-icon" rel="shortcut icon" href="{{ url_for('static', filename='./images/favicons/favicon.ico') }}">
+<link type="image/png" sizes="16x16" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@16.png') }}">
+<link type="image/png" sizes="32x32" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@32.png') }}">
+<link type="image/png" sizes="96x96" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@96.png') }}">
+<link type="image/png" sizes="120x120" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@120.png') }}">
+<link type="image/png" sizes="192x192" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@192.png') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/fontawesome.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/solid.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/fonts.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/variables.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/main.css') }}">
+    </head>
+    <body>
+        <header>
+            <a class="header__logo_link" href="{{ url_for('index') }}" tabindex="-1">
+                <img class="header__logo" src="{{ url_for('static', filename='./images/books-ru-black.svg') }}">
+            </a>
+            <form class="header__search" method="get" action="{{ url_for('index') }}">
+                <input class="search__field" name="search" type="text" autocomplete="off" placeholder="Книга, серия, автор, издательство">
+                <button class="search__button" tabindex="-1" type="submit">
+                    <span class="fas fa-search"></span>
+                </button>
+            </form>
+            <button class="header__user">
+                <h1 class="header__user__name">Сергей Минаков</h1>
+                <img class="header__user__avatar" src="{{ url_for('static', filename='./images/avatars/1.jpg') }}">
+            </button>
+            <ul class="header__menu">
+                <li class="header__menu__item">
+                    <a href="{{ url_for('index') }}">Библиотека</a>
+                </li>
+                <li class="header__menu__item">
+                    <a href="./mybooks">Мои книги</a>
+                </li>
+                <li class="header__menu__item">
+                    <a href="./genres">Жанры</a>
+                </li>
+                <li class="header__menu__item-right">
+                    <a href="./cart">Корзина</a>
+                </li>
+            </ul>
+        </header>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+        <script src="{{ url_for('static', filename='./scripts/utils.js') }}"></script>
+        <script src="{{ url_for('static', filename='./scripts/main.js') }}"></script>
+    </body>
+</html>
