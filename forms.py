@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Email
 
 
 class LoginForm(FlaskForm):
@@ -25,6 +25,10 @@ class RegistrationForm(FlaskForm):
         'Ваша фамилия',
         validators=[DataRequired()]
     )
+    email = StringField(
+        'E-mail',
+        validators=[DataRequired(), Email()]
+    )
     login = StringField(
         'Логин',
         validators=[DataRequired()]
@@ -34,3 +38,10 @@ class RegistrationForm(FlaskForm):
         validators=[DataRequired()]
     )
     submit = SubmitField('Зарегестрироваться')
+
+
+class PaymentForm(FlaskForm):
+    giftcode = StringField(
+        'Подарочный код'
+    )
+    submit = SubmitField('Активировать')

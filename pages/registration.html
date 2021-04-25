@@ -21,6 +21,7 @@
             <form action="" method="post" novalidate>
                 <input type="text" id="name" name="name" placeholder="Ваше имя" required>
                 <input type="text" id="surname" name="surname" placeholder="Ваша фамилия" required>
+                <input type="email" inputmode="email" id="email" name="email" placeholder="E-mail" required>
                 <input type="text" id="login" name="login" placeholder="Логин" required>
                 <input type="password" id="password" name="password" placeholder="Пароль" required>
                 {{ form.csrf_token }}

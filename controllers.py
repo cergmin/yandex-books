@@ -2,10 +2,7 @@ from flask_login import LoginManager
 from shutil import copyfile
 from hashlib import sha256
 from data.db_session import *
-from data.authors import Author
-from data.series import Series
-from data.books import Book
-from data.users import User
+from data.__all_models import *
 
 
 class DataController:
@@ -26,13 +23,14 @@ class DataController:
         
         return password_hash
     
-    def add_user(self, login, name, surname, password):
+    def add_user(self, login, name, surname, email, password):
         # Добавление записи о пользователе
         user = User()
 
         user.login = login
         user.name = name
         user.surname = surname
+        user.email = email
         user.password_hash = self.get_password_hash(password, name)
 
         self.session.add(user)
@@ -77,22 +75,36 @@ class DataController:
 
         self.session.add(book)
         self.session.commit()
+    
+    def add_giftcode(self, code, value):
+        giftcode = GiftCode()
 
-    def get_author(self, id):
-        return self.session.query(Author).get(id)
+        giftcode.code = code
+        giftcode.value = value
 
-    def get_book(self, id):
-        return self.session.query(Book).get(id)
+        self.session.add(giftcode)
+        self.session.commit()
+
+    def get_author(self, author_id):
+        return self.session.query(Author).get(author_id)
+
+    def get_book(self, book_id):
+        return self.session.query(Book).get(book_id)
 
     def get_books(self):
         return self.session.query(Book).all()
     
-    def get_series(self, id):
-        return self.session.query(Series).get(id)
+    def get_series(self, series_id):
+        return self.session.query(Series).get(series_id)
     
-    def get_user(self, name):
+    def get_user(self, login):
         return self.session.query(User).filter(
-            User.name == name
+            User.login == login
+        ).first()
+    
+    def get_giftcode(self, giftcode):
+        return self.session.query(GiftCode).filter(
+            GiftCode.code == giftcode
         ).first()
     
     def check_user_password(self, user, password):
@@ -100,3 +112,28 @@ class DataController:
             password,
             user.name
         )
+    
+    def activate_giftcode(self, user_id, code):
+        user = self.session.query(User).get(user_id)
+        giftcode = self.get_giftcode(code)
+
+        if not user:
+            return {
+                'error_message': 'Не удалось определить пользователя'
+            }
+        
+        if not giftcode:
+            return {
+                'error_message': 'Такой подарочный код не найден'
+            }
+
+        user.balance += giftcode.value
+        self.session.query(GiftCode).filter(
+            GiftCode.code == code
+        ).delete()
+        
+        self.session.commit()
+        
+        return {
+            'success_message': 'Код успешно активирован'
+        }

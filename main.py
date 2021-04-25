@@ -4,9 +4,9 @@ from utils import *
 from sections import *
 from controllers import *
 from forms import *
-from flask import Flask, render_template, redirect
-from flask_login import login_user, current_user
-from data.users import User
+from flask import Flask, render_template, redirect, abort
+from flask_login import login_user, logout_user, current_user, login_required
+from data.__all_models import *
 
 app = Flask(
     __name__,
@@ -84,12 +84,44 @@ def registration():
                 form.login.data,
                 form.name.data,
                 form.surname.data,
+                form.email.data,
                 form.password.data
             )
         )
         return redirect('/')
 
     return render_template('registration.html', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
+
+
+@app.route('/pay', methods=['GET', 'POST'])
+@login_required
+def pay():
+    form = PaymentForm()
+
+    response = {}
+    if form.validate_on_submit():
+        if len(str(form.giftcode.data)) != 8:
+            response = {
+                'error_message': 'Подарочный код должен содержать 8 символов'
+            }
+        elif not form.giftcode.data.isdigit():
+            response = {
+                'error_message': 'Подарочный код может состоять только из цифр'
+            }
+        else:
+            response = dc.activate_giftcode(
+                current_user.id,
+                form.giftcode.data
+            )
+
+    return render_template('pay.html', form=form, **response)
 
 
 @app.route('/book/<int:book_id>')
@@ -128,6 +160,26 @@ def author(author_id):
     )
 
 
+@app.route('/user/<string:login>')
+def user(login):
+    user = dc.get_user(login)
+
+    if not user:
+        return abort(404)
+
+    data = {
+        'user_id': str(user.id),
+        'user_login': user.login,
+        'user_name': user.name,
+        'user_surname': user.surname,
+    }
+
+    return render_template(
+        'user.html',
+        **data
+    )
+
+
 @app.route('/series/<int:series_id>')
 def series(series_id):
     series = dc.get_series(series_id)
@@ -144,7 +196,8 @@ def series(series_id):
 
 if __name__ == '__main__':
     dc = DataController('db/data.db')
-    # dc.add_user('cergmin', 'Сергей', 'Минаков', '123456')
+    # dc.add_giftcode(31415926, 500)
+    # dc.add_user('cergmin', 'Сергей', 'Минаков', 'cergmin@gmail.com', '123456')
     # dc.add_author('Милена Завойчинская')
     # dc.add_author('Джоан Роулинг')
     # dc.add_series('Высшая Школа Библиотекарей')

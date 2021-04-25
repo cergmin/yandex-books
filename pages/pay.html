@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+    <section class="pay_page">
+        <div class="pay_page__gifcode">
+            {% if success_message %}
+                <div class="success_message">{{ success_message }}</div>
+            {% endif %}
+
+            {% if error_message %}
+                <div class="error_message">{{ error_message }}</div>
+            {% endif %}
+
+            <h1>Пополнение счёта</h1>
+            <h2>Введите подарочный код, чтобы получить средства.</h2>
+            <form action="" method="post" novalidate>
+                <input type="text" inputmode="numeric" maxlength="8" autocomplete="off" id="giftcode" name="giftcode" placeholder="Подарочный код" required>
+                {{ form.csrf_token }}
+                <button class="btn" id="submit" name="submit">Активировать</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}
