@@ -19,12 +19,12 @@
             </p>
             {% endif %}
 
+            <button class="book_info__buy_button btn" type="button">Купить за {{ price }}</button>
+            <button class="book_info__add_to_cart_button btn-gray" type="button">Добавить в корзину</button>
+        
             <p class="book_info__description">
                 {{ book.description }}
             </p>
-
-            <button class="book_info__buy_button" type="button">Купить за {{ price }}</button>
-            <button class="book_info__add_to_cart_button" type="button">Добавить в корзину</button>
         </div>
     </section>
 {% endblock %}

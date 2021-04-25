@@ -2,26 +2,27 @@
 <html lang="ru">
     <head>
         <meta charset="utf-8">
+        <meta name="theme-color" content="#fff">
         <meta name="msapplication-TileColor" content="#ffcc00">
         <meta name="application-name" content="Яндекс.Книги">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Яндекс.Книги</title>
-        <link type="image/x-icon" rel="shortcut icon" href="{{ url_for('static', filename='./images/favicons/favicon.ico') }}">
-<link type="image/png" sizes="16x16" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@16.png') }}">
-<link type="image/png" sizes="32x32" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@32.png') }}">
-<link type="image/png" sizes="96x96" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@96.png') }}">
-<link type="image/png" sizes="120x120" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@120.png') }}">
-<link type="image/png" sizes="192x192" rel="icon" href="{{ url_for('static', filename='./images/favicons/favicon@192.png') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/fontawesome.min.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/solid.min.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/fonts.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/variables.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='./styles/main.css') }}">
+        <link type="image/x-icon" rel="shortcut icon" href="{{ url_for('static', filename='images/favicons/favicon.ico') }}">
+        <link type="image/png" sizes="16x16" rel="icon" href="{{ url_for('static', filename='images/favicons/favicon@16.png') }}">
+        <link type="image/png" sizes="32x32" rel="icon" href="{{ url_for('static', filename='images/favicons/favicon@32.png') }}">
+        <link type="image/png" sizes="96x96" rel="icon" href="{{ url_for('static', filename='images/favicons/favicon@96.png') }}">
+        <link type="image/png" sizes="120x120" rel="icon" href="{{ url_for('static', filename='images/favicons/favicon@120.png') }}">
+        <link type="image/png" sizes="192x192" rel="icon" href="{{ url_for('static', filename='images/favicons/favicon@192.png') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/fontawesome.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/solid.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/fonts.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/variables.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
     </head>
     <body>
         <header>
             <a class="header__logo_link" href="{{ url_for('index') }}" tabindex="-1">
-                <img class="header__logo" src="{{ url_for('static', filename='./images/books-ru-black.svg') }}">
+                <img class="header__logo" src="{{ url_for('static', filename='images/books-ru-black.svg') }}">
             </a>
             <form class="header__search" method="get" action="{{ url_for('index') }}">
                 <input class="search__field" name="search" type="text" autocomplete="off" placeholder="Книга, серия, автор, издательство">
@@ -29,30 +30,93 @@
                     <span class="fas fa-search"></span>
                 </button>
             </form>
-            <button class="header__user">
-                <h1 class="header__user__name">Сергей Минаков</h1>
-                <img class="header__user__avatar" src="{{ url_for('static', filename='./images/avatars/1.jpg') }}">
-            </button>
-            <ul class="header__menu">
+            {% if current_user.is_authenticated %}
+                <button class="header__user">
+                    <h1 class="header__user__name">
+                        {{ current_user.name }} {{ current_user.surname }}
+                    </h1>
+                    <img class="header__user__avatar" src="{{ url_for('static', filename='images/avatars/' ~ current_user.id ~ '.jpg') }}">
+                </button>
+            {% else %}
+                <div class="header__auth">
+                    <a class="header__auth__login btn" href="{{ url_for('login') }}">
+                        Вход
+                    </a>
+                    <a class="header__auth__registration btn" href="{{ url_for('registration') }}">
+                        Регистрация
+                    </a>
+                </div>
+            {% endif %}
+            <ul class="header__menu" role="navigation">
                 <li class="header__menu__item">
                     <a href="{{ url_for('index') }}">Библиотека</a>
                 </li>
-                <li class="header__menu__item">
-                    <a href="./mybooks">Мои книги</a>
-                </li>
+
+                {% if current_user.is_authenticated %}
+                    <li class="header__menu__item">
+                        <a href="./mybooks">Мои книги</a>
+                    </li>
+                {% endif %}
+
                 <li class="header__menu__item">
                     <a href="./genres">Жанры</a>
                 </li>
-                <li class="header__menu__item-right">
-                    <a href="./cart">Корзина</a>
-                </li>
+
+                {% if current_user.is_authenticated %}
+                    <li class="header__menu__item-right">
+                        <a href="./cart">Корзина</a>
+                    </li>
+                {% endif %}
             </ul>
         </header>
         <main>
             {% block content %}
             {% endblock %}
         </main>
-        <script src="{{ url_for('static', filename='./scripts/utils.js') }}"></script>
-        <script src="{{ url_for('static', filename='./scripts/main.js') }}"></script>
+        <footer>
+            <ul class="footer__menu" role="navigation">
+                <li class="footer__menu__item">
+                    <a href="./genres">
+                        <img src="{{ url_for('static', filename='images/theater-masks.svg') }}" style="padding: 14px 10px 15px">
+                    </a>
+                </li>
+
+                <li class="footer__menu__item">
+                    <a href="{{ url_for('index') }}">
+                        <img src="{{ url_for('static', filename='images/home.svg') }}" style="padding: 13px 10px 14px">
+                    </a>
+                </li>
+
+                {% if current_user.is_authenticated %}
+                    <li class="footer__menu__item">
+                        <a href="./mybooks">
+                            <img src="{{ url_for('static', filename='images/book-open.svg') }}" style="padding: 12px 12px 10px">
+                        </a>
+                    </li>
+                    <li class="footer__menu__item">
+                        <a href="./cart">
+                            <img src="{{ url_for('static', filename='images/shopping-basket.svg') }}" style="padding: 13px 12px 12px">
+                        </a>
+                    </li>
+                    <li class="footer__menu__item">
+                        <a href="./user">
+                            <img src="{{ url_for('static', filename='images/user.svg') }}" style="padding: 14px 10px 15px">
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="footer__menu__item">
+                        <a href="{{ url_for('login') }}">
+                            <img src="{{ url_for('static', filename='images/user.svg') }}" style="padding: 14px 10px 15px">
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </footer>
+        <script src="{{ url_for('static', filename='scripts/utils.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+        <script>
+            {% block javascript %}
+            {% endblock %}
+        </script>
     </body>
 </html>

@@ -40,6 +40,7 @@
 
 @media screen and (max-width: 600px) {
     :root{
+        --main-padding: 2rem;
         --items-amount: 2;
     }
 }

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <section class="auth_page">
+        <div class="auth_page__login">
+            {% if message %}
+                <div class="message">{{ message }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="message">
+                            Ошибка в поле {{ field.label }}:<br>{{ error }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+
+            <h1>Авторизация</h1>
+            <h2>Рады видеть вас снова!</h2>
+            <form action="" method="post" novalidate>
+                <input type="text" id="login" name="login" placeholder="Логин" required>
+                <input type="password" id="password" name="password" placeholder="Пароль" required>
+                <input type="checkbox" id="remember_me" name="remember_me" value="y">
+                <label for="remember_me">Запомнить меня</label>
+                {{ form.csrf_token }}
+                <button class="btn" id="submit" name="submit">Войти</button>
+                <a class="btn-gray" href="{{ url_for('registration') }}">Зарегестрироваться</a>
+            </form>
+        </div>
+    </section>
+{% endblock %}

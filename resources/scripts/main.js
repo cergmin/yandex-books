@@ -24,25 +24,25 @@ function caruselScrollHandler(e) {
     
     for (let i = 0; i < items.length; i++) {
         if (i > prevItemIndex && i < nextItemIndex) {
-            items[i].classList.add("visible");
+            items[i].classList.add('visible');
         }
         else {
-            items[i].classList.remove("visible");
+            items[i].classList.remove('visible');
         }
     }
 
     if (prevItemIndex + 1 === 0) {
-        prevButton.classList.add("hidden");
+        prevButton.classList.add('hidden');
     }
     else{
-        prevButton.classList.remove("hidden");
+        prevButton.classList.remove('hidden');
     }
 
     if (nextItemIndex >= items.length) {
-        nextButton.classList.add("hidden");
+        nextButton.classList.add('hidden');
     }
     else{
-        nextButton.classList.remove("hidden");
+        nextButton.classList.remove('hidden');
     }
 }
 
@@ -53,9 +53,9 @@ function createCaruselResizeHandler(carusels) {
 }
 
 function caruselControlsHandler(e) {
-    let controlAction = e.target.getAttribute("data-action");
+    let controlAction = e.target.getAttribute('data-action');
     let caruselContainer = e.target.parentElement.querySelector(
-        ".carusel__container"
+        '.carusel__container'
     );
     let caruselContainerWidth = caruselContainer.offsetWidth;
 
@@ -71,16 +71,16 @@ function caruselControlsHandler(e) {
     );
 
     switch (controlAction) {
-        case "goNext":
+        case 'goNext':
             caruselContainer.scrollBy({
                 left: visibleItemsAmount * itemSize,
-                behavior: "smooth"
+                behavior: 'smooth'
             });
             break;
-        case "goPrev":
+        case 'goPrev':
             caruselContainer.scrollBy({
                 left: -visibleItemsAmount * itemSize,
-                behavior: "smooth"
+                behavior: 'smooth'
             });
             break;
     }
@@ -91,13 +91,9 @@ function caruselInitializator(carusel) {
     let controlNext = carusel.querySelector('.carusel__control-next');
     let controlPrev = carusel.querySelector('.carusel__control-prev');
 
-    container.addEventListener('scroll', caruselScrollHandler);
-    controlNext.addEventListener('click', caruselControlsHandler);
-    controlPrev.addEventListener('click', caruselControlsHandler);
-
+    let items = container.querySelectorAll('.carusel__item');
     let containerWidth = container.offsetWidth;
 
-    let items = container.querySelectorAll('.carusel__item');
     let itemWidth = items[items.length - 1].offsetWidth;
     let itemMargin = parseFloat(
         window.getComputedStyle(items[items.length - 1]).marginLeft
@@ -106,23 +102,37 @@ function caruselInitializator(carusel) {
     
     let visibleItemsAmount = Math.floor(containerWidth / itemSize);
 
-    controlPrev.classList.add('hidden');
-    if (items.length < visibleItemsAmount) {
-        controlNext.classList.add('hidden');
-    }
-    
-    for (let i = 0; i < items.length; i++) {
-        if (i < visibleItemsAmount) {
-            items[i].classList.add("visible");
+    if (isMobile()) {
+        controlNext.remove();
+        controlPrev.remove();
+
+        for (let i = 0; i < items.length; i++) {
+            items[i].classList.add('visible');
         }
-        else {
-            items[i].classList.remove("visible");
+    }
+    else{
+        container.addEventListener('scroll', caruselScrollHandler);
+        controlNext.addEventListener('click', caruselControlsHandler);
+        controlPrev.addEventListener('click', caruselControlsHandler);
+        
+        controlPrev.classList.add('hidden');
+        if (items.length < visibleItemsAmount) {
+            controlNext.classList.add('hidden');
+        }
+        
+        for (let i = 0; i < items.length; i++) {
+            if (i < visibleItemsAmount) {
+                items[i].classList.add('visible');
+            }
+            else {
+                items[i].classList.remove('visible');
+            }
         }
     }
 }
-
-window.onload = () => {
-    let carusels = document.querySelectorAll('.carusel, .carusel-book');
+    
+window.addEventListener('load', function() {
+    let carusels = document.getElementsByClassName('carusel');
 
     window.addEventListener(
         'resize',
@@ -132,4 +142,4 @@ window.onload = () => {
     for (let i = 0; i < carusels.length; i++) {
         caruselInitializator(carusels[i]);
     }
-};
+});

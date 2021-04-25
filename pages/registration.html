@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+    <section class="auth_page">
+        <div class="auth_page__registration">
+            {% if message %}
+                <div class="message">{{ message }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="message">
+                            Ошибка в поле {{ field.label }}:<br>{{ error }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+
+            <h1>Регистрация</h1>
+            <h2>Впервые на Яндекс Книгах?</h2>
+            <form action="" method="post" novalidate>
+                <input type="text" id="name" name="name" placeholder="Ваше имя" required>
+                <input type="text" id="surname" name="surname" placeholder="Ваша фамилия" required>
+                <input type="text" id="login" name="login" placeholder="Логин" required>
+                <input type="password" id="password" name="password" placeholder="Пароль" required>
+                {{ form.csrf_token }}
+                <p>Нажимая кнопку Зарегестрироваться, вы принимаете Условия, Политику использования данных и Политику в отношении файлов cookie.</p>
+                <button class="btn" id="submit" name="submit">Зарегестрироваться</button>
+                <a class="btn-gray" href="{{ url_for('login') }}">Авторизоваться</a>
+            </form>
+        </div>
+    </section>
+{% endblock %}

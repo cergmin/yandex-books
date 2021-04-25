@@ -42,8 +42,14 @@ header{
     height: 5rem;
     top: 0;
     left: 0;
+    grid-template-columns: 11rem 1fr auto;
+    grid-template-rows: 3rem 2rem;
+    column-gap: 1rem;
+    align-items: center;
     user-select: none;
+    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 5%);
     position: fixed;
+    display: grid;
     z-index: 100;
 }
 
@@ -54,38 +60,87 @@ main{
     padding-top: 1.2rem;
 }
 
-.header__logo_link{
-    width: 11rem;
-    height: 3rem;
-    margin-right: 1rem;
-    line-height: 3rem;
-    vertical-align: top;
+footer{
+    background-color: hsl(0deg 0% 100%);
+    width: 100%;
+    height: 56px;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    column-gap: 0;
+    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 5%);
+    justify-content: center;
+    position: fixed;
+    display: none;
+    z-index: 100;
+}
+
+a{
+    color: #222;
     outline: none;
+    font-size: 1rem;
+    font-weight: 500;
     text-decoration: none;
+}
+
+a:hover,
+a:focus{
+    color: #c90209;
+}
+
+.btn,
+.btn-gray{
+    color: #000;
+    background-color: #ffcc00;
+    height: 2.25rem;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 2.25rem;
+    outline: none;
+    border: none;
+    border-radius: 0.3rem;
+    user-select: none;
+    cursor: pointer;
+    display: block;
+}
+
+.btn-gray{
+    background-color: #dbdbdb;
+}
+
+.btn:hover,
+.btn:focus{
+    color: #000;
+    background-color: #f0b400;
+}
+
+.btn-gray:hover,
+.btn-gray:focus{
+    color: #000;
+    background-color: #ccc;
+}
+
+.header__logo_link{
+    width: 100%;
+    height: 100%;
     user-select: none;
     -webkit-user-drag: none;
-    display: inline-block;
-    position: relative;
 }
 
 .header__logo{
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
     object-fit: contain;
-    position: absolute;
 }
 
 .header__search{
-    width: calc(100% - 11rem - 1rem - 15rem - 3rem);
-    max-width: 25rem;
-    min-width: 20rem;
+    width: 100%;
     height: 2rem;
     line-height: 2rem;
-    top: calc(0.5rem - 1px);
     border: 1px solid #e5e5e5;
-    border-radius: 5px;
+    border-radius: 0.3rem;
     overflow: hidden;
     position: relative;
     display: inline-flex;
@@ -94,7 +149,7 @@ main{
 .header__search *{
     color: #222;
     background-color: #fff;
-    height: 2rem;
+    height: inherit;
     border: none;
     outline: none;
 }
@@ -130,6 +185,20 @@ main{
 
 .search__button:hover span{
     opacity: 1;
+}
+
+.header__auth{
+    width: auto;
+    height: 2rem;
+    float: right;
+}
+
+.header__auth__login,
+.header__auth__registration{
+    width: auto;
+    height: 2rem;
+    line-height: 2rem;
+    display: inline-block;
 }
 
 .header__user{
@@ -170,6 +239,8 @@ main{
 .header__menu{
     width: 100%;
     height: 2rem;
+    grid-column-start: 1;
+    grid-column-end: 4;
     border-top: 1px solid hsl(0deg 0% 0% / 5%);
     box-sizing: border-box;
     position: relative;
@@ -183,28 +254,45 @@ main{
 
 .header__menu__item a,
 .header__menu__item-right a{
-    color: #222;
     height: 100%;
     padding: 0 1rem;
-    outline: none;
     line-height: 2rem;
-    font-size: 1rem;
-    font-weight: 500;
-    text-decoration: none;
     display: block;
-}
-
-.header__menu__item a:hover,
-.header__menu__item a:focus,
-.header__menu__item-right a:hover,
-.header__menu__item-right a:focus{
-    color: #c90209;
 }
 
 .header__menu__item-right{
     right: 0;
     float: right;
     position: absolute;
+}
+
+.footer__menu{
+    width: 100%;
+    max-width: 400px;
+    height: 100%;
+    justify-content: center;
+    display: flex;
+}
+
+.footer__menu__item{
+    width: 100%;
+    height: 56px;
+    display: block;
+}
+
+.footer__menu__item a{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: block;
+}
+
+.footer__menu__item a img{
+    width: 56px;
+    height: 56px;
+    padding: 20%;
+    opacity: 0.75;
+    box-sizing: border-box;
 }
 
 section{
@@ -215,17 +303,14 @@ section{
     margin-bottom: 1rem;
 }
 
-.carusel,
-.carusel-book{
+.carusel{
+    --max-cover-ratio: var(--item-ratio);
+
     width: calc(100% + var(--main-padding) * 2);
     height: auto;
     left: calc(var(--main-padding) * -1);
     overflow: hidden;
     position: relative;
-}
-
-.carusel-book{
-    --max-cover-ratio: var(--item-ratio);
 }
 
 .carusel__container{
@@ -281,17 +366,15 @@ section{
     transform: rotate(180deg);
 }
 
-.carusel:hover .carusel__control-prev:not(.hidden),
-.carusel:hover .carusel__control-next:not(.hidden),
-.carusel-book:hover .carusel__control-prev:not(.hidden),
-.carusel-book:hover .carusel__control-next:not(.hidden){
+body .carusel:hover .carusel__control-prev:not(.hidden),
+body .carusel:hover .carusel__control-next:not(.hidden){
     cursor: pointer;
     opacity: 1;
 }
 
 .carusel__item{
     width: var(--item-width);
-    height: var(--item-height);
+    height: calc(var(--item-height) + 5.2rem);
     margin-left: var(--main-items-padding);
     scroll-snap-align: end;
     scroll-snap-stop: normal;
@@ -301,12 +384,7 @@ section{
     filter: none;
 }
 
-.carusel-book .carusel__item{
-    height: calc(var(--item-height) + 5.2rem);
-}
-
-.carusel:hover .carusel__item:not(.visible),
-.carusel-book:hover .carusel__item:not(.visible){
+.carusel:hover .carusel__item:not(.visible){
     filter: brightness(0.4) saturate(0.7);
 }
 
@@ -329,6 +407,7 @@ section{
 }
 
 .book__cover{
+    background-color: #888;
     width: 100%;
     height: calc(
         var(--item-height) * var(--cover-ratio) / var(--max-cover-ratio)
@@ -450,60 +529,121 @@ section{
     margin-bottom: 1rem;
 }
 
-.book_info__author a,
-.book_info__series a{
-    color: #222;
-    font-weight: 500;
-    text-decoration: none;
-    outline: none;
-}
-
-.book_info__author a:hover,
-.book_info__author a:focus,
-.book_info__series a:hover,
-.book_info__series a:focus{
-    color: #c90209;
-}
-
 .book_info__buy_button,
 .book_info__add_to_cart_button{
-    color: #000;
-    background-color: #ffcc00;
     width: 100%;
     max-width: 15rem;
-    height: 2.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.book_info__add_to_cart_button{
+    margin-bottom: 1rem;
+}
+
+.auth_page{
+    grid-template-columns: 18rem;
+    grid-template-rows: auto;
+    row-gap: 4rem;
+    justify-content: center;
+    display: grid;
+}
+
+.auth_page .message{
+    color: #000;
+    background-color: #ffe1db;
+    width: 100%;
+    height: auto;
+    left: 50%;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #91080c;
+    border-radius: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-align: center;
+    line-height: 1.4rem;
+    display: block;
+    position: relative;
+    transform: translateX(-50%);
+}
+
+.auth_page .message label{
+    top: 0;
+    font-weight: 700;
+    user-select: auto;
+}
+
+.auth_page__login,
+.auth_page__registration{
+    width: 100%;
+    height: auto;
+}
+
+.auth_page h1,
+.auth_page h2{
+    margin-left: 0.1rem;
+}
+
+.auth_page h1{
+    margin-bottom: 0rem;
+    line-height: 1.9rem;
+}
+
+.auth_page h2{
+    color: #555;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
-    font-weight: 500;
-    line-height: 2.25rem;
+    line-height: 1.4rem;
+    font-weight: 400;
+}
+
+.auth_page p{
+    font-size: 0.6rem;
+    margin: 0.5rem 0 0.4rem;
+    padding: 0 0.1rem;
+    box-sizing: border-box;
+}
+
+.auth_page input{
+    color: #222;
+    background-color: #fff;
+    width: 100%;
+    height: 2.5rem;
+    margin-bottom: 0.3rem;
+    padding-left: 1rem;
+    font-size: 1rem;
+    line-height: 2rem;
+    border: 1px solid #e5e5e5;
     outline: none;
-    border: none;
     border-radius: 0.3rem;
-    user-select: none;
-    cursor: pointer;
+    box-sizing: border-box;
+    position: relative;
     display: block;
 }
 
-.book_info__buy_button:hover,
-.book_info__buy_button:focus{
-    background-color: #f0b400;
+.auth_page input[type="checkbox"]{
+    background-color: #fff;
+    width: 1.3rem;
+    height: 1.3rem;
+    border: 1px solid #e5e5e5;
+    display: inline-block;
+    margin: 0.3rem 0.2rem 0.6rem 0;
 }
 
-.book_info__add_to_cart_button{
-    background-color: #dbdbdb;
+.auth_page label{
+    display: inline-block;
+    position: relative;
+    top: -0.3rem;
+    cursor: pointer;
+    user-select: none;
 }
 
-.book_info__add_to_cart_button:hover,
-.book_info__add_to_cart_button:focus{
-    background-color: #ccc;
+.auth_page button{
+    width: 100%;
+    margin-bottom: 0.5rem;
 }
 
 @media screen and (max-width: 920px){
-    .header__search{
-        width: calc(100% - 12rem - 4rem - 6px);
-        max-width: none;
-    }
-
     .header__user{
         width: auto;
         max-width: 15rem;
@@ -517,35 +657,23 @@ section{
 @media screen and (max-width: 800px){
     header {
         height: 7rem;
+        grid-template-rows: 2rem 3rem 2rem;
+    }
+
+    .header__logo_link {
+        height: 1.5rem;
+        grid-column-start: 1;
+        grid-column-end: 4;
+        align-self: flex-end;
+    }
+
+    .header__search {
+        grid-column-start: 1;
+        grid-column-end: 3;
     }
 
     main {
         margin-top: 7rem;
-    }
-
-    .header__logo_link{
-        width: 100%;
-        height: 1.5rem;
-        margin-top: 0.5rem;
-        margin-right: 0;
-    }
-
-    .header__search{
-        width: calc(100% - 4rem - 2px);
-        max-width: none;
-        min-width: 9rem;
-    }
-    
-    .header__user__name{
-        width: 4rem;
-    }
-    
-    .header__user__name{
-        display: none;
-    }
-
-    .header__menu{
-        bottom: calc(-1rem + 1px);
     }
 
     .book_info__cover{
@@ -559,16 +687,29 @@ section{
     }
 
     header {
-        height: 3rem;
+        height: 56px;
+        grid-template-columns: 1fr;
+        grid-template-rows: 56px;
     }
 
     main {
-        margin-top: 3rem;
+        margin-top: 56px;
+    }
+
+    footer{
+        display: flex;
     }
 
     .header__logo_link,
+    .header__user,
+    .header__auth,
     .header__menu{
         display: none;
+    }
+
+    .carusel__container{
+        -ms-scroll-snap-type: x proximity;
+        scroll-snap-type: x proximity;
     }
 
     .book_info__cover{
