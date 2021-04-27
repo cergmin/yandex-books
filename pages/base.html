@@ -25,7 +25,7 @@
                 <img class="header__logo" src="{{ url_for('static', filename='images/books-ru-black.svg') }}">
             </a>
             <form class="header__search" method="get" action="{{ url_for('index') }}">
-                <input class="search__field" inputmode="search" name="search" type="text" autocomplete="off" placeholder="Книга, серия, автор, издательство">
+                <input class="search__field" value="{{ search_request }}" inputmode="search" name="search" type="text" autocomplete="off" placeholder="Поиск">
                 <button class="search__button" tabindex="-1" type="submit">
                     <span class="fas fa-search"></span>
                 </button>

@@ -7,7 +7,7 @@
                 <div class="carusel" style="--max-cover-ratio: {{ section.data['max_cover_ratio'] }}">
                     <ul class="carusel__container">
                         {% for book in section.data['books']: %}
-                            <li class="carusel__item">
+                            <li class="carusel__item visible">
                                 <div class="book">
                                     <a class="book__cover_link" href="./book/{{ book['book_id'] }}" style="--cover-ratio: {{ book['cover_ratio'] }}">
                                         <img
@@ -82,7 +82,7 @@
                                 '    <ul class="carusel__container">';
                     
                     for (let book of section.books) {
-                        sectionHTML += '<li class="carusel__item">' +
+                        sectionHTML += '<li class="carusel__item visible">' +
                                     '   <div class="book">' +
                                     '      <a class="book__cover_link" href="./book/' + book.book_id + '" style="--cover-ratio: ' + book.cover_ratio + '">' +
                                     '          <img class="book__cover" src="./resources/images/covers/books/' + book.book_id + '.jpg" alt="Книга ' + book.book_name + ' автора ' + book.author_name + '">' +

@@ -240,3 +240,10 @@ class DataController:
         return {
             'success_message': 'Код успешно активирован'
         }
+
+    def find_books(self, request):
+        return self.session.query(
+            Book
+        ).filter(
+            Book.name.like('%' + request + '%')
+        ).all()

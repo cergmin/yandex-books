@@ -5,7 +5,7 @@ from utils import *
 from sections import *
 from controllers import *
 from forms import *
-from flask import Flask, render_template, redirect, abort, send_from_directory
+from flask import Flask, render_template, redirect, abort, send_from_directory, request
 from flask_login import login_user, logout_user, current_user, login_required
 from data.__all_models import *
 
@@ -28,8 +28,25 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    sections = []
+    search_request = request.args.get("search")
+    if search_request is not None:
+        found_books = [
+            {
+                'book_id': str(book.id),
+                'book_name': book.name,
+                'author_id': str(book.author_id),
+                'author_name': dc.get_author(book.author_id).name
+            }
+            for book in dc.find_books(search_request)
+        ]
 
+        return render_template(
+            'search.html',
+            search_request=search_request,
+            books=found_books
+        )
+
+    sections = []
     sections.append(
         BookSection(dc, dc.get_books())
     )
