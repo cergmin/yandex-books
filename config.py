@@ -4,4 +4,5 @@ HOST = '192.168.0.106'
 
 TEMPLATE_FOLDER = 'pages'
 STATIC_FOLDER = 'resources'
+UPLOAD_FOLDER = 'uploads'
 SECRET_KEY = 'YuFUXYoPLaGwtBnjBRdwMIHslNLKjWce'

@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from flask_wtf.file import FileField, FileRequired
+from wtforms import TextAreaField, StringField, IntegerField, FloatField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Email
 
 
@@ -45,3 +46,38 @@ class PaymentForm(FlaskForm):
         'Подарочный код'
     )
     submit = SubmitField('Активировать')
+
+
+class AddBookForm(FlaskForm):
+    cover = FileField(
+        'Обложка',
+        validators=[FileRequired()]
+    )
+    book = FileField(
+        'Текст',
+        validators=[FileRequired()]
+    )
+    name = StringField(
+        'Название',
+        validators=[DataRequired()]
+    )
+    short_name = StringField(
+        'Короткое название'
+    )
+    description = TextAreaField(
+        'Описание',
+        validators=[DataRequired()]
+    )
+    author_id = IntegerField(
+        'Автор',
+        validators=[DataRequired()]
+    )
+    series_id = IntegerField(
+        'Серия',
+        validators=[DataRequired()]
+    )
+    price = FloatField(
+        'Цена',
+        validators=[DataRequired()]
+    )
+    submit = SubmitField('Добавить')

@@ -8,7 +8,7 @@ class Section:
 
 
 class BookSection(Section):
-    def __init__(self, dc, books, title='Название секции'):
+    def __init__(self, dc, books, title='Популярное'):
         self.dc = dc
         self.data = {
             'type': 'book',

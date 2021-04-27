@@ -33,118 +33,83 @@
             <section></section>
         {% endif %}
     {% endfor %}
-    <section>
-        <h1 class="section__title">Популярные категории</h1>
-        <div class="cardshelf">
-            <a
-                class="card"
-                style="background-image: url('{{ url_for('static', filename='images/covers/cards/1.webp') }}');"
-                href="./card/1"></a>
-            <a
-                class="card"
-                style="background-image: url('{{ url_for('static', filename='images/covers/cards/2.webp') }}');"
-                href="./card/2"></a>
-            <a
-                class="card"
-                style="background-image: url('{{ url_for('static', filename='images/covers/cards/3.webp') }}');"
-                href="./card/3"></a>
-            <a
-                class="card"
-                style="background-image: url('{{ url_for('static', filename='images/covers/cards/4.webp') }}');"
-                href="./card/4"></a>
-            <a
-                class="card"
-                style="background-image: url('{{ url_for('static', filename='images/covers/cards/5.webp') }}');"
-                href="./card/5"></a>
-            <a
-                class="card"
-                style="background-image: url('{{ url_for('static', filename='images/covers/cards/6.webp') }}');"
-                href="./card/6"></a>
-            <a
-                class="card"
-                style="background-image: url('{{ url_for('static', filename='images/covers/cards/19.webp') }}');"
-                href="./card/19"></a>
-            <a
-                class="card"
-                style="background-image: url('{{ url_for('static', filename='images/covers/cards/8.webp') }}');"
-                href="./card/8"></a>
-        </div>
-    </section>
 {% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/carusel.js') }}"></script>
+<script>
+    // Чтобы ajax запросы не отправлялись слишком часто,
+    // введён флаг, который устанавливается при отправке запроса
+    // и снимается, когда приходит ответ или через 1 секунуду
+    let isAJAXResponceWaiting = false;
+    let responceWaitingInterval;
 
-{% block javascript %}
-// Чтобы ajax запросы не отправлялись слишком часто,
-// введён флаг, который устанавливается при отправке запроса
-// и снимается, когда приходит ответ или через 1 секунуду
-let isAJAXResponceWaiting = false;
-let responceWaitingInterval;
-
-window.addEventListener('scroll', function() {
-    // Проверяем при прокрутке,
-    // что у пользователь осталось
-    // меньше 350 пикселей до конца страницы
-    if (document.documentElement.getBoundingClientRect().bottom - document.documentElement.clientHeight > 350) {
-       return;
-    }
-
-    // Проверяем, что мы не ожидаем ответа
-    if (isAJAXResponceWaiting) {
+    window.addEventListener('scroll', function() {
+        // Проверяем при прокрутке,
+        // что у пользователь осталось
+        // меньше 350 пикселей до конца страницы
+        if (document.documentElement.getBoundingClientRect().bottom - document.documentElement.clientHeight > 350) {
         return;
-    }
-
-    isAJAXResponceWaiting = true;
-    responceWaitingInterval = setInterval(function(){
-        isAJAXResponceWaiting = false;
-    }, 1000);
-
-    AJAX(
-        window.location.origin + '/api/sections/2',
-        '',
-        'GET',
-        function(json) {
-            isAJAXResponceWaiting = false;
-            clearInterval(responceWaitingInterval);
-
-            let data = JSON.parse(json);
-            let main = document.getElementsByTagName('main')[0];
-
-            for (let section of data) {
-                let sectionElement = document.createElement('section');
-                let sectionHTML = '<h1 class="section_title">' +
-                                      section.title +
-                                  '</h1>';
-                
-                sectionHTML += '<div class="carusel" style="--max-cover-ratio: ' + section.max_cover_ratio + '">' +
-                               '    <ul class="carusel__container">';
-                
-                for (let book of section.books) {
-                    sectionHTML += '<li class="carusel__item">' +
-                                   '   <div class="book">' +
-                                   '      <a class="book__cover_link" href="./book/' + book.book_id + '" style="--cover-ratio: ' + book.cover_ratio + '">' +
-                                   '          <img class="book__cover" src="./resources/images/covers/books/' + book.book_id + '.jpg" alt="Книга ' + book.book_name + ' автора ' + book.author_name + '">' +
-                                   '      </a>' +
-                                   '      <a class="book__title" href="./book/' + book.book_id + '" tabindex="-1">' +
-                                               book.book_name +
-                                   '      </a>' +
-                                   '      <a class="book__author" href="./author/' + book.author_id + '">' +
-                                               book.author_name +
-                                   '      </a>' +
-                                   '   </div>' +
-                                   '</li>';
-                }
-
-                sectionHTML += '    </ul>' +
-                               '    <button type="button" data-action="goPrev" class="carusel__control-prev"></button>' +
-                               '    <button type="button" data-action="goNext" class="carusel__control-next"></button>' +
-                               '</div>';
-
-                sectionElement.innerHTML = sectionHTML;
-                caruselInitializator(
-                    sectionElement.getElementsByClassName('carusel')[0]
-                );
-                main.appendChild(sectionElement);
-            }
         }
-    )
-});
+
+        // Проверяем, что мы не ожидаем ответа
+        if (isAJAXResponceWaiting) {
+            return;
+        }
+
+        isAJAXResponceWaiting = true;
+        responceWaitingInterval = setInterval(function(){
+            isAJAXResponceWaiting = false;
+        }, 1000);
+
+        AJAX(
+            window.location.origin + '/api/sections/2',
+            '',
+            'GET',
+            function(json) {
+                isAJAXResponceWaiting = false;
+                clearInterval(responceWaitingInterval);
+
+                let data = JSON.parse(json);
+                let main = document.getElementsByTagName('main')[0];
+
+                for (let section of data) {
+                    let sectionElement = document.createElement('section');
+                    let sectionHTML = '<h1 class="section__title">' +
+                                        section.title +
+                                    '</h1>';
+                    
+                    sectionHTML += '<div class="carusel" style="--max-cover-ratio: ' + section.max_cover_ratio + '">' +
+                                '    <ul class="carusel__container">';
+                    
+                    for (let book of section.books) {
+                        sectionHTML += '<li class="carusel__item">' +
+                                    '   <div class="book">' +
+                                    '      <a class="book__cover_link" href="./book/' + book.book_id + '" style="--cover-ratio: ' + book.cover_ratio + '">' +
+                                    '          <img class="book__cover" src="./resources/images/covers/books/' + book.book_id + '.jpg" alt="Книга ' + book.book_name + ' автора ' + book.author_name + '">' +
+                                    '      </a>' +
+                                    '      <a class="book__title" href="./book/' + book.book_id + '" tabindex="-1">' +
+                                                book.book_name +
+                                    '      </a>' +
+                                    '      <a class="book__author" href="./author/' + book.author_id + '">' +
+                                                book.author_name +
+                                    '      </a>' +
+                                    '   </div>' +
+                                    '</li>';
+                    }
+
+                    sectionHTML += '    </ul>' +
+                                '    <button type="button" data-action="goPrev" class="carusel__control-prev"></button>' +
+                                '    <button type="button" data-action="goNext" class="carusel__control-next"></button>' +
+                                '</div>';
+
+                    sectionElement.innerHTML = sectionHTML;
+                    caruselInitializator(
+                        sectionElement.getElementsByClassName('carusel')[0]
+                    );
+                    main.appendChild(sectionElement);
+                }
+            }
+        )
+    });
+</script>
 {% endblock %}

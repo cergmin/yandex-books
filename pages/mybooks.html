@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+    <section>
+        <h1 class="section__title">Мои книги</h1>
+        <ul class="cart">
+            {% for book in books %}
+                <li class="cart__item">
+                    <div class="book">
+                        <a class="book__cover_link" href="./book/{{ book['book_id'] }}" style="--cover-ratio: {{ book['cover_ratio'] }}">
+                            <img
+                                class="book__cover"
+                                src="{{ url_for('static', filename='./images/covers/books/' + book['book_id'] + '.jpg') }}"
+                                alt="Книга {{ book['book_name'] }} автора {{ book['author_name'] }}">
+                        </a>
+                        <a class="book__title" href="{{ url_for('book', book_id=book['book_id']) }}" tabindex="-1">
+                            {{ book['book_name'] }}
+                        </a>
+                        <a class="book__author" href="./author/{{ book['author_id'] }}">
+                            {{ book['author_name'] }}
+                        </a>
+                    </div>
+                    <a class="book__download_button btn-purple" href="{{ url_for('download', book_id=book['book_id']) }}" download="{{ book['book_name'] }}.fb2">Скачать</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock %}

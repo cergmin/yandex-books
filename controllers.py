@@ -23,7 +23,7 @@ class DataController:
         
         return password_hash
     
-    def add_user(self, login, name, surname, email, password):
+    def add_user(self, login, name, surname, email, password, status=0):
         # Добавление записи о пользователе
         user = User()
 
@@ -32,6 +32,7 @@ class DataController:
         user.surname = surname
         user.email = email
         user.password_hash = self.get_password_hash(password, name)
+        user.status = status
 
         self.session.add(user)
         self.session.commit()
@@ -75,6 +76,8 @@ class DataController:
 
         self.session.add(book)
         self.session.commit()
+
+        return book
     
     def add_giftcode(self, code, value):
         giftcode = GiftCode()
@@ -87,6 +90,13 @@ class DataController:
 
     def get_author(self, author_id):
         return self.session.query(Author).get(author_id)
+    
+    def get_authors(self):
+        return self.session.query(
+            Author
+        ).order_by(
+            Author.name
+        ).all()
 
     def get_book(self, book_id):
         return self.session.query(Book).get(book_id)
@@ -97,7 +107,19 @@ class DataController:
     def get_series(self, series_id):
         return self.session.query(Series).get(series_id)
     
-    def get_user(self, login):
+    def get_all_series(self):
+        return self.session.query(
+            Series
+        ).order_by(
+            Series.name
+        ).all()
+
+    def get_user(self, user_id):
+        return self.session.query(User).filter(
+            User.id == user_id
+        ).first()
+    
+    def get_user_by_login(self, login):
         return self.session.query(User).filter(
             User.login == login
         ).first()
@@ -111,6 +133,87 @@ class DataController:
         return user.password_hash == self.get_password_hash(
             password,
             user.name
+        )
+    
+    def add_item_to_cart(self, user_id, book_id):
+        if self.is_item_in_cart(user_id, book_id):
+            return
+
+        # Борьба с garbage collector
+        book = self.get_book(book_id)
+        user = self.get_user(user_id)
+
+        # Добавление книги в корзину
+        user.cart.append(book)
+
+        self.session.commit()
+    
+    def get_items_in_cart(self, user_id):
+        user = self.get_user(user_id)
+        return user.cart
+    
+    def is_item_in_cart(self, user_id, book_id):
+        user = self.get_user(user_id)
+        return any(
+            [
+                book.id == book_id
+                for book in user.cart
+            ]
+        )
+    
+    def delete_item_from_cart(self, user_id, book_id):
+        if not self.is_item_in_cart(user_id, book_id):
+            return
+
+        user = self.get_user(user_id)
+        user.cart.remove(
+            self.get_book(book_id)
+        )
+
+        self.session.commit()
+    
+    def buy_book(self, user_id, book_id):
+        if self.is_book_bought(user_id, book_id):
+            return {
+                'is_ok': False,
+                'message': 'Книгу уже куплена'
+            }
+
+        # Борьба с garbage collector
+        book = self.get_book(book_id)
+        user = self.get_user(user_id)
+
+        # Проверка, достаточно ли у нас средств,
+        # чтобы купить эту книгу
+        if book.price > user.balance:
+            return {
+                'is_ok': False,
+                'message': 'Недостаточно средств на счёте'
+            }
+        
+        # Снимаем средства со счёта пользователя
+        user.balance -= book.price
+
+        # Добавление книги в список купленных
+        user.bought_books.append(book)
+
+        self.session.commit()
+        return {
+            'is_ok': True,
+            'message': 'Книга успешно куплена'
+        }
+    
+    def get_bought_books(self, user_id):
+        user = self.get_user(user_id)
+        return user.bought_books
+    
+    def is_book_bought(self, user_id, book_id):
+        user = self.get_user(user_id)
+        return any(
+            [
+                book.id == book_id
+                for book in user.bought_books
+            ]
         )
     
     def activate_giftcode(self, user_id, code):

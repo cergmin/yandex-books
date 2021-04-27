@@ -26,7 +26,7 @@
 body{
     background-color: #f2f2f2;
     overflow-x: hidden;
-    overflow-y: visible;
+    overflow-y: scroll;
 }
 
 header,
@@ -54,6 +54,7 @@ header{
 }
 
 main{
+    min-height: 150vh;
     height: auto;
     margin-top: 5rem;
     padding-top: 1.2rem;
@@ -88,7 +89,8 @@ a:focus{
 }
 
 .btn,
-.btn-gray{
+.btn-gray,
+.btn-purple{
     color: #000;
     background-color: #ffcc00;
     height: 2.25rem;
@@ -100,6 +102,7 @@ a:focus{
     outline: none;
     border: none;
     border-radius: 0.3rem;
+    box-sizing: border-box;
     user-select: none;
     cursor: pointer;
     display: block;
@@ -107,6 +110,10 @@ a:focus{
 
 .btn-gray{
     background-color: #dbdbdb;
+}
+
+.btn-purple{
+    background-color: #b831f6;
 }
 
 .btn:hover,
@@ -119,6 +126,12 @@ a:focus{
 .btn-gray:focus{
     color: #000;
     background-color: #ccc;
+}
+
+.btn-purple:hover,
+.btn-purple:focus{
+    color: #000;
+    background-color: #a00ae6;
 }
 
 .header__logo_link{
@@ -356,7 +369,11 @@ a:focus{
 }
 
 .footer__user_menu.hidden{
-    display: none;
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
 }
 
 .footer__user_menu__item{
@@ -479,8 +496,11 @@ body .carusel:hover .carusel__control-next:not(.hidden){
     scroll-snap-align: end;
     scroll-snap-stop: normal;
     flex-shrink: 0;
+    align-items: end;
     transition: filter 0.1s ease-out;
     position: relative;
+    overflow: hidden;
+    display: flex;
     filter: none;
 }
 
@@ -630,7 +650,8 @@ body .carusel:hover .carusel__control-next:not(.hidden){
 }
 
 .book_info__buy_button,
-.book_info__add_to_cart_button{
+.book_info__add_to_cart_button,
+.book_info__download_button{
     width: 100%;
     max-width: 15rem;
     margin-bottom: 0.5rem;
@@ -641,7 +662,8 @@ body .carusel:hover .carusel__control-next:not(.hidden){
 }
 
 .auth_page,
-.pay_page{
+.pay_page,
+.admin_page{
     grid-template-columns: 18rem;
     grid-template-rows: auto;
     row-gap: 4rem;
@@ -649,9 +671,15 @@ body .carusel:hover .carusel__control-next:not(.hidden){
     display: grid;
 }
 
+.admin_page{
+    grid-template-columns: 25rem;
+}
+
 .auth_page .message,
 .pay_page .error_message,
-.pay_page .success_message{
+.pay_page .success_message,
+.admin_page .error_message,
+.admin_page .success_message{
     color: #000;
     background-color: #ffe1db;
     width: 100%;
@@ -670,6 +698,7 @@ body .carusel:hover .carusel__control-next:not(.hidden){
     transform: translateX(-50%);
 }
 
+.admin_page .success_message,
 .pay_page .success_message{
     background-color: #dfffdb;
     border: 1px solid #139108;
@@ -677,26 +706,31 @@ body .carusel:hover .carusel__control-next:not(.hidden){
 
 .auth_page .message label,
 .pay_page .error_message label,
-.pay_page .success_message label{
+.pay_page .success_message label,
+.admin_page .error_message label,
+.admin_page .success_message label{
     top: 0;
     font-weight: 700;
     user-select: auto;
 }
 
 .auth_page__login,
-.auth_page__registration{
+.auth_page__registration,
+.admin_page__add_book{
     width: 100%;
     height: auto;
 }
 
 .auth_page h1,
 .auth_page h2,
+.admin_page h1,
 .pay_page h1,
 .pay_page h2{
     margin-left: 0.1rem;
 }
 
 .auth_page h1,
+.admin_page h1,
 .pay_page h1{
     margin-bottom: 0rem;
     line-height: 1.9rem;
@@ -718,11 +752,24 @@ body .carusel:hover .carusel__control-next:not(.hidden){
     box-sizing: border-box;
 }
 
+.admin_page__add_book__form label{
+    color: #222;
+    margin: 0.8rem 0 0.25rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: block;
+}
+
 .auth_page input,
+.admin_page input,
+.admin_page textarea,
+.admin_page select,
 .pay_page input{
     color: #222;
     background-color: #fff;
     width: 100%;
+    max-width: 100%;
+    min-width: 100%;
     height: 2.5rem;
     margin-bottom: 0.3rem;
     padding-left: 1rem;
@@ -734,6 +781,10 @@ body .carusel:hover .carusel__control-next:not(.hidden){
     box-sizing: border-box;
     position: relative;
     display: block;
+}
+
+.admin_page textarea{
+    min-height: 5rem;
 }
 
 .pay_page input{
@@ -767,9 +818,36 @@ body .carusel:hover .carusel__control-next:not(.hidden){
 }
 
 .auth_page button,
+.admin_page button,
 .pay_page button{
     width: 100%;
     margin-bottom: 0.5rem;
+}
+
+.cart{
+    --max-cover-ratio: var(--item-ratio);
+
+    width: 100%;
+    height: auto;
+    grid-template-columns: repeat(auto-fill, var(--item-width));
+    gap: var(--main-items-padding);
+    display: grid;
+}
+
+.cart__item{
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+}
+
+.book__buy_button,
+.book__download_button{
+    width: 100%;
+    margin: 0.5rem 0;
 }
 
 @media screen and (max-width: 920px){
@@ -799,6 +877,10 @@ body .carusel:hover .carusel__control-next:not(.hidden){
     .header__search {
         grid-column-start: 1;
         grid-column-end: 3;
+    }
+
+    .header__user_menu{
+        top: 5rem;
     }
 
     main {
@@ -834,7 +916,11 @@ body .carusel:hover .carusel__control-next:not(.hidden){
     .header__auth,
     .header__menu,
     .header__user_menu{
-        display: none;
+        position: absolute;
+        clip: rect(0, 0, 0, 0);
+        width: 1px;
+        height: 1px;
+        margin: -1px;
     }
 
     .carusel__container{
@@ -842,7 +928,35 @@ body .carusel:hover .carusel__control-next:not(.hidden){
         scroll-snap-type: x proximity;
     }
 
+    .carusel:hover .carusel__item:not(.visible){
+        filter: none;
+    }
+
+    .carusel .carusel__control-prev,
+    .carusel .carusel__control-next{
+        display: none;
+    }
+
+    .book_info{
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        justify-items: center;
+    }
+
     .book_info__cover{
-        height: calc(100vh - 5.2rem);
+        height: 22rem;
+        max-height: 45vh;
+    }
+
+    .book_info__name,
+    .book_info__author,
+    .book_info__series{
+        text-align: center;
+    }
+
+    .book_info__buy_button,
+    .book_info__add_to_cart_button,
+    .book_info__download_button{
+        margin: 0 auto 0.5rem;
     }
 }

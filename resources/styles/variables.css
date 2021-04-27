@@ -38,6 +38,12 @@
     }
 }
 
+@media screen and (max-width: 650px) {
+    :root{
+        --scroll-bar-width: 0px;
+    }
+}
+
 @media screen and (max-width: 600px) {
     :root{
         --main-padding: 2rem;

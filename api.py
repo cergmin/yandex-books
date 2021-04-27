@@ -1,7 +1,8 @@
 import flask
 import config
-from random import sample, randint
+from random import sample, randint, choice
 from controllers import DataController
+from flask_login import current_user, login_required
 from json import dumps
 
 dc = DataController('db/data.db')
@@ -14,12 +15,21 @@ blueprint = flask.Blueprint(
 
 
 @blueprint.route('/api/sections/<int:amount>', methods=['GET'])
-def get_sections(amount):
+def api_sections(amount):
     sections = []
+
+    title_start = [
+        'Точно', 'Мы уверены', 'Несомненно'
+    ]
+
+    title_end = [
+        ' тебе понравится', ' тебя поразит', ' тебя удивит',
+        'вам понравится', 'вас поразит', 'вас удивит'
+    ]
 
     for i in range(amount):
         sections.append({
-            'title': 'Название секции #' + str(i),
+            'title': choice(title_start) + ' ' + choice(title_end),
             'books': [],
             'max_cover_ratio': 0
 
@@ -49,3 +59,24 @@ def get_sections(amount):
             )
 
     return dumps(sections)
+
+
+@blueprint.route('/api/cart/<int:book_id>', methods=['PUT', 'DELETE'])
+@login_required
+def api_cart(book_id):
+    if flask.request.method == 'PUT':
+        dc.add_item_to_cart(current_user.id, book_id)
+    elif flask.request.method == 'DELETE':
+        dc.delete_item_from_cart(current_user.id, book_id)
+    
+    return dumps({
+        'is_ok': True
+    })
+
+
+@blueprint.route('/api/buy/<int:book_id>', methods=['POST'])
+@login_required
+def api_buy(book_id):
+    return dumps(
+        dc.buy_book(current_user.id, book_id)
+    )

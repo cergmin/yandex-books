@@ -19,12 +19,23 @@
             </p>
             {% endif %}
 
-            <button class="book_info__buy_button btn" type="button">Купить за {{ price }}</button>
-            <button class="book_info__add_to_cart_button btn-gray" type="button">Добавить в корзину</button>
+            {% if is_bought %}
+                <a class="book_info__buy_button btn-purple" href="{{ url_for('download', book_id=book.id) }}" download="{{ book.name }}.fb2">Скачать</a>
+            {% else %}
+                <button class="book_info__download_button btn buy_button" data-book-id="{{ book.id }}" data-book-name="{{ book.name }}" type="button">Купить за {{ price }}</button>
+                {% if is_in_cart %}
+                    <button class="book_info__add_to_cart_button btn-gray cart_button" data-book-id="{{ book.id }}" data-action="deleteFromCart" type="button">Удалить из корзины</button>
+                {% else %}
+                    <button class="book_info__add_to_cart_button btn-gray cart_button"data-book-id="{{ book.id }}" data-action="addToCart" type="button">Добавить в корзину</button>
+                {% endif %}
+            {% endif %}
         
             <p class="book_info__description">
                 {{ book.description }}
             </p>
         </div>
     </section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/book.js') }}"></script>
 {% endblock %}
